@@ -82,7 +82,7 @@ function getCartTotal() {
 function renderCart() {
   const itemsEl = $('[data-cart-items]');
   const footEl  = $('[data-cart-foot]');
-  const countEl = $('[data-cart-count]');
+  const countEls = $$('[data-cart-count]'); // header + FAB
   const labelEl = $('[data-cart-items-label]');
   const totalEl = $('[data-cart-total]');
   const progFill= $('[data-progress-fill]');
@@ -91,11 +91,11 @@ function renderCart() {
 
   const totalItems = STATE.cart.reduce((t, l) => t + l.qty, 0);
   const total = getCartTotal();
-  if (countEl) {
-    countEl.textContent = totalItems;
-    countEl.classList.add('is-bump');
-    setTimeout(() => countEl.classList.remove('is-bump'), 400);
-  }
+  countEls.forEach(el => {
+    el.textContent = totalItems;
+    el.classList.add('is-bump');
+    setTimeout(() => el.classList.remove('is-bump'), 400);
+  });
   if (labelEl) labelEl.textContent = `${totalItems} ${totalItems === 1 ? 'sztuka' : (totalItems > 1 && totalItems < 5 ? 'sztuki' : 'sztuk')}`;
   if (totalEl) totalEl.textContent = total.toFixed(2).replace('.', ',') + ' zł';
 
@@ -274,7 +274,7 @@ function initCartHandlers() {
     addToCart();
     setTimeout(() => showToast('Przekierowywanie do Shop Pay…'), 800);
   });
-  $('[data-cart-trigger]')?.addEventListener('click', openCart);
+  $$('[data-cart-trigger]').forEach(b => b.addEventListener('click', openCart));
   $('[data-cart-close]')?.addEventListener('click', closeCart);
   $('[data-cart-backdrop]')?.addEventListener('click', closeCart);
   $('[data-checkout]')?.addEventListener('click', () => showToast('Przekierowywanie do kasy…'));
